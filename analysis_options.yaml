@@ -1,0 +1,17 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+
+  rules:
+    prefer_const_constructors: true
+    prefer_final_fields: true
+    avoid_print: true
+    always_use_package_imports: true
+    directives_ordering: true
+    always_declare_return_types: true
+    sort_child_properties_last: true
+
+
+formatter:
+  trailing_commas: preserve
+  page_width: 120
