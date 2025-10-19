@@ -14,9 +14,11 @@ class FlashcardApp extends StatelessWidget {
       title: 'Flash Card',
       home: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+
           title: const Text('Flash Card'),
         ),
-        body: Center(
+        body: const Center(
           child: QuizScreenBody(),
         ),
       ),
@@ -69,6 +71,10 @@ class _QuizScreenBodyState extends State<QuizScreenBody> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
+        ProgressBar(
+          currentIndex: _currentQuestionIndex,
+          totalQuestions: _quizQuestions.length,
+        ),
         Text(
           'Question ${_currentQuestionIndex + 1} of ${_quizQuestions.length}',
           style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
@@ -107,6 +113,44 @@ class _QuizScreenBodyState extends State<QuizScreenBody> {
           ],
         ),
       ],
+    );
+  }
+}
+
+class ProgressBar extends StatelessWidget {
+  final int currentIndex;
+  final int totalQuestions;
+
+  const ProgressBar({super.key, required this.currentIndex, required this.totalQuestions});
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = ((currentIndex + 1) / totalQuestions * 100).round();
+    return Container(
+      decoration: BoxDecoration(border: BoxBorder.all(), borderRadius: const BorderRadius.all(Radius.circular(8.0))),
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        spacing: 8.0,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: (currentIndex + 1),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              height: 16,
+            ),
+          ),
+          Text('$progress%'),
+          Expanded(
+            flex: totalQuestions - (currentIndex + 1),
+            child: const SizedBox(),
+          ),
+          Text('${currentIndex + 1} of $totalQuestions'),
+        ],
+      ),
     );
   }
 }
