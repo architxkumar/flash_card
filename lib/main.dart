@@ -11,15 +11,23 @@ class FlashcardApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.dark,
       title: 'Flash Card',
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-
           title: const Text('Flash Card'),
         ),
-        body: const Center(
-          child: QuizScreenBody(),
+        body: SingleChildScrollView(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              padding: const EdgeInsets.all(16.0),
+              child: const QuizScreenBody(),
+            ),
+          ),
         ),
       ),
     );
@@ -38,7 +46,7 @@ class _QuizScreenBodyState extends State<QuizScreenBody> {
   int _currentQuestionIndex = 0;
   bool _showAnswer = false;
 
-  void onToggleAnswerVisibility() {
+  void _onToggleAnswerVisibility() {
     setState(() {
       _showAnswer = !_showAnswer;
     });
@@ -64,8 +72,6 @@ class _QuizScreenBodyState extends State<QuizScreenBody> {
 
   @override
   Widget build(BuildContext context) {
-    bool _isNextButtonDisabled = _currentQuestionIndex >= _quizQuestions.length - 1;
-    bool _isPreviousButtonDisabled = _currentQuestionIndex <= 0;
     return Column(
       spacing: 8.0,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,43 +81,16 @@ class _QuizScreenBodyState extends State<QuizScreenBody> {
           currentIndex: _currentQuestionIndex,
           totalQuestions: _quizQuestions.length,
         ),
-        Text(
-          'Question ${_currentQuestionIndex + 1} of ${_quizQuestions.length}',
-          style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+        QuestionSection(question: _quizQuestions[_currentQuestionIndex].question),
+        CardControllerSection(
+          onPreviousQuestion: _onPreviousQuestion,
+          onNextQuestion: _onNextQuestion,
+          currentQuestionIndex: _currentQuestionIndex,
+          onToggleAnswerVisibility: _onToggleAnswerVisibility,
+          quizQuestionLength: _quizQuestions.length,
+          showAnswer: _showAnswer,
         ),
-        const SizedBox(height: 20.0),
-        Text(
-          _quizQuestions[_currentQuestionIndex].question,
-          style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20.0),
-        if (_showAnswer)
-          Text(
-            _quizQuestions[_currentQuestionIndex].answer,
-            style: const TextStyle(fontSize: 20.0),
-            textAlign: TextAlign.center,
-          ),
-        const SizedBox(height: 20.0),
-        ElevatedButton(
-          onPressed: onToggleAnswerVisibility,
-          child: Text(_showAnswer ? 'Hide Answer' : 'Show Answer'),
-        ),
-        const SizedBox(height: 20.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: _isPreviousButtonDisabled ? null : _onPreviousQuestion,
-              child: const Text('Previous'),
-            ),
-            const SizedBox(width: 20.0),
-            ElevatedButton(
-              onPressed: _isNextButtonDisabled ? null : _onNextQuestion,
-              child: const Text('Next'),
-            ),
-          ],
-        ),
+        if (_showAnswer) AnswerSection(answer: _quizQuestions[_currentQuestionIndex].answer),
       ],
     );
   }
@@ -127,7 +106,11 @@ class ProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final progress = ((currentIndex + 1) / totalQuestions * 100).round();
     return Container(
-      decoration: BoxDecoration(border: BoxBorder.all(), borderRadius: const BorderRadius.all(Radius.circular(8.0))),
+      decoration: BoxDecoration(
+        border: BoxBorder.all(),
+        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+        color: Theme.of(context).colorScheme.primaryContainer,
+      ),
       padding: const EdgeInsets.all(8.0),
       child: Row(
         spacing: 8.0,
@@ -138,18 +121,136 @@ class ProgressBar extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
               height: 16,
             ),
           ),
-          Text('$progress%'),
+          Text(
+            '$progress%',
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
+          ),
           Expanded(
             flex: totalQuestions - (currentIndex + 1),
             child: const SizedBox(),
           ),
-          Text('${currentIndex + 1} of $totalQuestions'),
+          Text(
+            '${currentIndex + 1} of $totalQuestions',
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class QuestionSection extends StatelessWidget {
+  final String question;
+
+  const QuestionSection({super.key, required this.question});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      alignment: Alignment.center,
+      height: 250,
+      decoration: BoxDecoration(
+        border: BoxBorder.all(),
+        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+        color: Theme.of(context).colorScheme.secondaryContainer,
+      ),
+      child: Text(
+        question,
+        softWrap: true,
+        overflow: TextOverflow.fade,
+        style: TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class CardControllerSection extends StatelessWidget {
+  final void Function() onPreviousQuestion;
+  final void Function() onNextQuestion;
+  final void Function() onToggleAnswerVisibility;
+  final bool showAnswer;
+  final int currentQuestionIndex;
+  final int quizQuestionLength;
+
+  const CardControllerSection({
+    super.key,
+    required this.onPreviousQuestion,
+    required this.onNextQuestion,
+    required this.onToggleAnswerVisibility,
+    required this.showAnswer,
+    required this.currentQuestionIndex,
+    required this.quizQuestionLength,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.tertiaryContainer,
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      width: double.infinity,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        runAlignment: WrapAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: currentQuestionIndex <= 0 ? null : onPreviousQuestion,
+            child: const Text('Previous'),
+          ),
+          ElevatedButton(
+            onPressed: onToggleAnswerVisibility,
+            child: Text(showAnswer ? 'Hide Answer' : 'Show Answer'),
+          ),
+          ElevatedButton(
+            onPressed: currentQuestionIndex >= (quizQuestions.length - 1) ? null : onNextQuestion,
+            child: const Text('Next'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AnswerSection extends StatelessWidget {
+  final String answer;
+
+  const AnswerSection({super.key, required this.answer});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      alignment: Alignment.center,
+      height: 250,
+      decoration: BoxDecoration(
+        border: BoxBorder.all(),
+        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+        color: Theme.of(context).colorScheme.surfaceVariant,
+      ),
+      child: Text(
+        answer,
+        softWrap: true,
+        overflow: TextOverflow.fade,
+        style: TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+        textAlign: TextAlign.center,
       ),
     );
   }
