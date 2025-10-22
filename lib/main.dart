@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flash_card/quiz.dart';
 import 'package:flutter/material.dart';
 
@@ -10,22 +11,34 @@ class FlashcardApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.dark,
-      title: 'Flash Card',
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Flash Card'),
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        darkTheme: ThemeData(
+          colorScheme: darkDynamic,
+          brightness: Brightness.dark,
+          useMaterial3: true,
         ),
-        body: SingleChildScrollView(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 600),
-              padding: const EdgeInsets.all(16.0),
-              child: const QuizScreenBody(),
+        theme: ThemeData(
+          brightness: Brightness.light,
+          colorScheme: lightDynamic,
+          useMaterial3: true,
+        ),
+        themeMode: ThemeMode.system,
+        title: 'Flash Card',
+        home: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text('Flash Card'),
+          ),
+          body: SingleChildScrollView(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 600),
+                padding: const EdgeInsets.all(16.0),
+                child: const QuizScreenBody(),
+              ),
             ),
           ),
         ),
@@ -107,7 +120,6 @@ class ProgressBar extends StatelessWidget {
     final progress = ((currentIndex + 1) / totalQuestions * 100).round();
     return Container(
       decoration: BoxDecoration(
-        border: BoxBorder.all(),
         borderRadius: const BorderRadius.all(Radius.circular(16.0)),
         color: Theme.of(context).colorScheme.primaryContainer,
       ),
@@ -156,7 +168,6 @@ class QuestionSection extends StatelessWidget {
       alignment: Alignment.center,
       height: 250,
       decoration: BoxDecoration(
-        border: BoxBorder.all(),
         borderRadius: const BorderRadius.all(Radius.circular(16.0)),
         color: Theme.of(context).colorScheme.secondaryContainer,
       ),
@@ -196,7 +207,7 @@ class CardControllerSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.tertiaryContainer,
         borderRadius: BorderRadius.circular(16.0),
@@ -248,7 +259,17 @@ class AnswerSection extends StatelessWidget {
         style: TextStyle(
           fontSize: 24.0,
           fontWeight: FontWeight.bold,
+          color: Theme
+              .of(context)
+              .colorScheme
+              .onSurfaceVariant,
           color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
         ),
         textAlign: TextAlign.center,
       ),
