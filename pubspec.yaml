@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   dynamic_color: ^1.8.1
+  flutter_flip_card: ^0.0.6
 
 
 dev_dependencies:

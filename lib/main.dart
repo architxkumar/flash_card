@@ -3,6 +3,9 @@ import 'dart:collection';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flash_card/quiz.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flip_card/controllers/flip_card_controllers.dart';
+import 'package:flutter_flip_card/flipcard/flip_card.dart';
+import 'package:flutter_flip_card/modal/flip_side.dart';
 
 void main() => runApp(const FlashcardApp());
 
@@ -55,13 +58,14 @@ class QuizScreenBody extends StatefulWidget {
 }
 
 class _QuizScreenBodyState extends State<QuizScreenBody> {
+  final FlipCardController _controller = FlipCardController();
   final List<QuizQuestion> _quizQuestions = UnmodifiableListView(quizQuestions);
   int _currentQuestionIndex = 0;
   bool _showAnswer = false;
 
   void _onToggleAnswerVisibility() {
     setState(() {
-      _showAnswer = !_showAnswer;
+      _controller.flipcard();
     });
   }
 
@@ -94,7 +98,23 @@ class _QuizScreenBodyState extends State<QuizScreenBody> {
           currentIndex: _currentQuestionIndex,
           totalQuestions: _quizQuestions.length,
         ),
-        QuestionSection(question: _quizQuestions[_currentQuestionIndex].question),
+        FlipCard(
+          frontWidget: CardSection(
+            text: _quizQuestions[_currentQuestionIndex].question,
+            containerColor: Theme.of(context).colorScheme.secondaryContainer,
+            textColor: Theme.of(context).colorScheme.onSecondaryContainer,
+          ),
+          backWidget: CardSection(
+            text: _quizQuestions[_currentQuestionIndex].answer,
+            containerColor: Theme.of(context).colorScheme.surfaceVariant,
+            textColor: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+          controller: _controller,
+          animationDuration: Duration(milliseconds: 500),
+          rotateSide: _showAnswer ? RotateSide.bottom : RotateSide.right,
+          onTapFlipping: false,
+          axis: FlipAxis.vertical,
+        ),
         CardControllerSection(
           onPreviousQuestion: _onPreviousQuestion,
           onNextQuestion: _onNextQuestion,
@@ -103,7 +123,6 @@ class _QuizScreenBodyState extends State<QuizScreenBody> {
           quizQuestionLength: _quizQuestions.length,
           showAnswer: _showAnswer,
         ),
-        if (_showAnswer) AnswerSection(answer: _quizQuestions[_currentQuestionIndex].answer),
       ],
     );
   }
@@ -259,10 +278,6 @@ class AnswerSection extends StatelessWidget {
         style: TextStyle(
           fontSize: 24.0,
           fontWeight: FontWeight.bold,
-          color: Theme
-              .of(context)
-              .colorScheme
-              .onSurfaceVariant,
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
         textAlign: TextAlign.center,
@@ -270,6 +285,33 @@ class AnswerSection extends StatelessWidget {
     );
   }
 }
+
+class CardSection extends StatelessWidget {
+  final String text;
+  final Color containerColor;
+  final Color textColor;
+
+  const CardSection({super.key, required this.text, required this.containerColor, required this.textColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      alignment: Alignment.center,
+      height: 250,
+      decoration: BoxDecoration(
+        border: BoxBorder.all(),
+        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+        color: containerColor,
+      ),
+      child: Text(
+        text,
+        softWrap: true,
+        overflow: TextOverflow.fade,
+        style: TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.bold,
+          color: textColor,
         ),
         textAlign: TextAlign.center,
       ),
