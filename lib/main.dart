@@ -175,36 +175,6 @@ class ProgressBar extends StatelessWidget {
   }
 }
 
-class QuestionSection extends StatelessWidget {
-  final String question;
-
-  const QuestionSection({super.key, required this.question});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      alignment: Alignment.center,
-      height: 250,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-        color: Theme.of(context).colorScheme.secondaryContainer,
-      ),
-      child: Text(
-        question,
-        softWrap: true,
-        overflow: TextOverflow.fade,
-        style: TextStyle(
-          fontSize: 24.0,
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSecondaryContainer,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-}
-
 class CardControllerSection extends StatelessWidget {
   final void Function() onPreviousQuestion;
   final void Function() onNextQuestion;
@@ -250,37 +220,6 @@ class CardControllerSection extends StatelessWidget {
             child: const Text('Next'),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class AnswerSection extends StatelessWidget {
-  final String answer;
-
-  const AnswerSection({super.key, required this.answer});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      alignment: Alignment.center,
-      height: 250,
-      decoration: BoxDecoration(
-        border: BoxBorder.all(),
-        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-        color: Theme.of(context).colorScheme.surfaceVariant,
-      ),
-      child: Text(
-        answer,
-        softWrap: true,
-        overflow: TextOverflow.fade,
-        style: TextStyle(
-          fontSize: 24.0,
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-        textAlign: TextAlign.center,
       ),
     );
   }
