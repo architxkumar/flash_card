@@ -112,9 +112,10 @@ class _QuizScreenBodyState extends State<QuizScreenBody> {
           ),
           controller: _controller,
           animationDuration: Duration(milliseconds: 500),
-          rotateSide: _showAnswer ? RotateSide.bottom : RotateSide.right,
+          // NOTE: there is a bug in the package, so rotateSide is set to bottom for both sides
+          rotateSide: _showAnswer ? RotateSide.bottom : RotateSide.bottom,
           onTapFlipping: false,
-          axis: FlipAxis.vertical,
+          axis: FlipAxis.horizontal,
         ),
         CardControllerSection(
           onPreviousQuestion: _onPreviousQuestion,
