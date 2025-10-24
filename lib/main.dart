@@ -30,11 +30,11 @@ class FlashcardApp extends StatelessWidget {
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,
-        title: 'Flash Card',
+        title: 'FlashCard',
         home: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: const Text('Flash Card'),
+            title: const Text('FlashCard'),
           ),
           body: SingleChildScrollView(
             child: Align(
