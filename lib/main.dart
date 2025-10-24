@@ -66,6 +66,7 @@ class _QuizScreenBodyState extends State<QuizScreenBody> {
   void _onToggleAnswerVisibility() {
     setState(() {
       _controller.flipcard();
+      _showAnswer = !_showAnswer;
     });
   }
 
