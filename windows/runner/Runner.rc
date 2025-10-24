@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example.flashcard" "\0"
-            VALUE "FileDescription", "flash_card" "\0"
+            VALUE "CompanyName", "architxkumar.dev" "\0"
+            VALUE "FileDescription", "FlashCard" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "flash_card" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.example.flashcard. All rights reserved." "\0"
-            VALUE "OriginalFilename", "flash_card.exe" "\0"
-            VALUE "ProductName", "flash_card" "\0"
+            VALUE "InternalName", "FlashCard" "\0"
+            VALUE "LegalCopyright", "© 2025 Archit Kumar" "\0"
+            VALUE "OriginalFilename", "flashcard.exe" "\0"
+            VALUE "ProductName", "FlashCard" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

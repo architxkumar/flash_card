@@ -1,4 +1,4 @@
-package com.example.flashcard.flash_card
+package com.example.flashcard
 
 import io.flutter.embedding.android.FlutterActivity
 
