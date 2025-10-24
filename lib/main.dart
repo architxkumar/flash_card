@@ -18,11 +18,13 @@ class FlashcardApp extends StatelessWidget {
       builder: (lightDynamic, darkDynamic) => MaterialApp(
         debugShowCheckedModeBanner: false,
         darkTheme: ThemeData(
+          colorSchemeSeed: darkDynamic == null ? const Color(0xFFFFD60A) : null,
           colorScheme: darkDynamic,
           brightness: Brightness.dark,
           useMaterial3: true,
         ),
         theme: ThemeData(
+          colorSchemeSeed: lightDynamic == null ? const Color(0xFFFFD60A) : null,
           brightness: Brightness.light,
           colorScheme: lightDynamic,
           useMaterial3: true,
