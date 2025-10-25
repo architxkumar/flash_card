@@ -243,7 +243,6 @@ class CardSection extends StatelessWidget {
       alignment: Alignment.center,
       height: 250,
       decoration: BoxDecoration(
-        border: BoxBorder.all(),
         borderRadius: const BorderRadius.all(Radius.circular(16.0)),
         color: containerColor,
       ),
