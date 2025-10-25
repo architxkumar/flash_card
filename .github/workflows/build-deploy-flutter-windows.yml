@@ -25,7 +25,7 @@ jobs:
       - name: Release Windows exe
         uses: softprops/action-gh-release@v1
         with:
-          files: build\windows\x64\runner\Release\flashcard.exe
+          files: build/windows/x64/runner/Release/flashcard.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
